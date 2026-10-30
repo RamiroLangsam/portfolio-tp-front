@@ -7,11 +7,13 @@ type CardProps = {
 
 export default function Card({ project }: CardProps) {
   return (
-    <div>
+    <div className="card">
       <img src={project.image} alt={project.title} />
       <h2>{project.title}</h2>
       <p>{project.description}</p>
-      <a href={project.link}>Ver proyecto</a>
+      <a href={project.link} target="_blank" rel="noopener noreferrer">
+        Ver proyecto
+      </a>
     </div>
   );
 }
