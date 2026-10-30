@@ -15,7 +15,7 @@ export default function Principal({ projects }: Props) {
       {projects.length === 0 ? (
         <p>Todavía no hay proyectos</p>
       ) : (
-        <div>
+        <div className="grid">
           {projects.map((project) => (
             <Card key={project.id} project={project} />
           ))}

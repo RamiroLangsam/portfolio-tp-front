@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Principal from "./pages/principal";
 import Admin from "./pages/admin";
 import type { Project } from "./data/tipos";
+import "./style/style.css";
 
 
 export default function App() {
