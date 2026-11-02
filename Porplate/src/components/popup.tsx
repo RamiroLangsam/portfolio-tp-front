@@ -27,7 +27,8 @@ export default function PopUp({ project, onSave, onClose }: Props) {
   }
 
   return (
-    <form onSubmit={guardar}>
+    <div className="overlay">
+      <form className="popup" onSubmit={guardar}>
       <h2>{project ? "Editar proyecto" : "Agregar proyecto"}</h2>
 
       <input
@@ -61,5 +62,6 @@ export default function PopUp({ project, onSave, onClose }: Props) {
       <button type="submit">Guardar</button>
       <button type="button" onClick={onClose}>Cancelar</button>
     </form>
+    </div>
   );
 }

@@ -4,11 +4,21 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Principal from "./pages/principal";
 import Admin from "./pages/admin";
 import type { Project } from "./data/tipos";
+import { perfilInicial, type Perfil } from "./data/perfil";
 import "./style/style.css";
-
 
 export default function App() {
   const [projects, setProjects] = useState<Project[]>([]);
+
+  const [perfil, setPerfil] = useState<Perfil>(() => {
+    const guardado = localStorage.getItem("perfil");
+    return guardado ? JSON.parse(guardado) : perfilInicial;
+  });
+
+  function guardarPerfil(nuevoPerfil: Perfil) {
+    setPerfil(nuevoPerfil);
+    localStorage.setItem("perfil", JSON.stringify(nuevoPerfil));
+  }
 
   function guardar(project: Project) {
     setProjects((prev) =>
@@ -29,7 +39,10 @@ export default function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<Principal projects={projects} />} />
+        <Route
+          path="/"
+          element={<Principal projects={projects} perfil={perfil} />}
+        />
         <Route
           path="/admin"
           element={
@@ -37,6 +50,8 @@ export default function App() {
               projects={projects}
               onSave={guardar}
               onDelete={eliminar}
+              perfil={perfil}
+              onSavePerfil={guardarPerfil}
             />
           }
         />
