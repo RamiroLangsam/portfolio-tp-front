@@ -82,13 +82,14 @@ export default function Admin({
             onChange={(e) => cambiarRed("github", e.target.value)}
             placeholder="URL de GitHub"
           />
-
+<small>Incluí https:// al principio del enlace.</small>
           <label>LinkedIn</label>
           <input
             value={datos.redes.linkedin}
             onChange={(e) => cambiarRed("linkedin", e.target.value)}
             placeholder="URL de LinkedIn"
           />
+          <small>Incluí https:// al principio del enlace.</small>
 
           <label>Instagram</label>
           <input
@@ -96,7 +97,7 @@ export default function Admin({
             onChange={(e) => cambiarRed("instagram", e.target.value)}
             placeholder="URL de Instagram"
           />
-
+<small>Incluí https:// al principio del enlace.</small>
           <button className="primary-btn" type="submit">
             Guardar perfil
           </button>
