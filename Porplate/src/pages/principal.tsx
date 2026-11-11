@@ -1,14 +1,32 @@
 
+import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import type { Project } from "../data/tipos";
-import type { Perfil } from "../data/perfil";
+import { perfilInicial, type Perfil } from "../data/perfil";
+import api from "../data/api";
 
-type Props = {
-  projects: Project[];
-  perfil: Perfil;
-};
+export default function Principal() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [perfil, setPerfil] = useState<Perfil>(perfilInicial);
 
-export default function Principal({ projects, perfil }: Props) {
+  useEffect(() => {
+    fetch(`${api}/api/proyectos`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al cargar proyectos");
+        return res.json();
+      })
+      .then((data) => setProjects(data))
+      .catch((error) => console.error(error));
+
+    fetch(`${api}/api/perfil`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al cargar perfil");
+        return res.json();
+      })
+      .then((data) => setPerfil(data))
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
     <main className="container">
       <section className="sobre-mi">
