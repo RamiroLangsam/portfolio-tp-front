@@ -26,7 +26,11 @@ app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: "Error interno del servidor." });
 });
+// En Vercel no hay que escuchar un puerto: la plataforma usa la app exportada.
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`API escuchando en http://localhost:${port}`);
+  });
+}
 
-app.listen(port, () => {
-  console.log(`API escuchando en http://localhost:${port}`);
-});
+export default app;
