@@ -1,19 +1,23 @@
-
 import { useEffect, useState, type FormEvent } from "react";
-import type { Project } from "../data/tipos";
+import type { Project, Diploma } from "../data/tipos";
 import { perfilInicial, type Perfil } from "../data/perfil";
 import Card from "../components/Card";
+import CardDiploma from "../components/CardDiploma";
 import PopUp from "../components/popup";
+import PopUpDiploma from "../components/popupDiploma";
 import api from "../data/api";
 
 export default function Admin() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [mostrar, setMostrar] = useState(false);
   const [seleccionado, setSeleccionado] = useState<Project | null>(null);
+  const [diplomas, setDiplomas] = useState<Diploma[]>([]);
+  const [mostrarDiploma, setMostrarDiploma] = useState(false);
+  const [diplomaSel, setDiplomaSel] = useState<Diploma | null>(null);
   const [datos, setDatos] = useState<Perfil>(perfilInicial);
   const [mostrarPerfil, setMostrarPerfil] = useState(false);
 
-  // Cargar proyectos y perfil desde la API
+  // Cargar proyectos, diplomas y perfil desde la API
   useEffect(() => {
     fetch(`${api}/api/proyectos`)
       .then((res) => {
@@ -21,6 +25,14 @@ export default function Admin() {
         return res.json();
       })
       .then((data) => setProjects(data))
+      .catch((error) => console.error(error));
+
+    fetch(`${api}/api/diplomas`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al cargar diplomas");
+        return res.json();
+      })
+      .then((data) => setDiplomas(data))
       .catch((error) => console.error(error));
 
     fetch(`${api}/api/perfil`)
@@ -87,6 +99,64 @@ export default function Admin() {
     } catch (error) {
       console.error(error);
       alert("No se pudo eliminar el proyecto");
+    }
+  }
+
+  function abrirDiploma(diploma: Diploma | null) {
+    setDiplomaSel(diploma);
+    setMostrarDiploma(true);
+  }
+
+  // Crear o editar un diploma
+  async function guardarDiploma(diploma: Diploma) {
+    try {
+      const res = await fetch(
+        diplomaSel
+          ? `${api}/api/diplomas/${diplomaSel.id}`
+          : `${api}/api/diplomas`,
+        {
+          method: diplomaSel ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(diploma)
+        }
+      );
+
+      if (!res.ok) throw new Error("Error al guardar diploma");
+
+      const diplomaGuardado = await res.json();
+
+      setDiplomas((prev) =>
+        diplomaSel
+          ? prev.map((d) =>
+              d.id === diplomaGuardado.id ? diplomaGuardado : d
+            )
+          : [...prev, diplomaGuardado]
+      );
+
+      setMostrarDiploma(false);
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo guardar el diploma");
+    }
+  }
+
+  // Eliminar un diploma
+  async function eliminarDiploma(id: number) {
+    if (!window.confirm("¿Seguro que querés eliminar este diploma?")) return;
+
+    try {
+      const res = await fetch(`${api}/api/diplomas/${id}`, {
+        method: "DELETE"
+      });
+
+      if (!res.ok) throw new Error("Error al eliminar diploma");
+
+      setDiplomas((prev) => prev.filter((d) => d.id !== id));
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo eliminar el diploma");
     }
   }
 
@@ -177,7 +247,6 @@ export default function Admin() {
               onChange={(e) => cambiarRed("instagram", e.target.value)}
               placeholder="tu@mail.com"
             />
-            <small>Incluí https:// al principio del enlace.</small>
 
             <button className="primary-btn" type="submit">
               Guardar perfil
@@ -213,6 +282,43 @@ export default function Admin() {
             </div>
           ))}
         </div>
+      )}
+
+      <div className="admin-header">
+        <h2>Mis diplomas</h2>
+        <button className="primary-btn" onClick={() => abrirDiploma(null)}>
+          + Agregar diploma
+        </button>
+      </div>
+
+      {diplomas.length === 0 ? (
+        <p>Todavía no hay diplomas</p>
+      ) : (
+        <div className="grid">
+          {diplomas.map((diploma) => (
+            <div className="admin-card" key={diploma.id}>
+              <CardDiploma diploma={diploma} />
+
+              <div className="admin-actions">
+                <button onClick={() => abrirDiploma(diploma)}>Editar</button>
+                <button
+                  className="delete-btn"
+                  onClick={() => eliminarDiploma(diploma.id)}
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {mostrarDiploma && (
+        <PopUpDiploma
+          diploma={diplomaSel}
+          onSave={guardarDiploma}
+          onClose={() => setMostrarDiploma(false)}
+        />
       )}
 
       {mostrar && (
