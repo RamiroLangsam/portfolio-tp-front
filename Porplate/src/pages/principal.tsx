@@ -1,12 +1,14 @@
 
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
-import type { Project } from "../data/tipos";
+import CardDiploma from "../components/CardDiploma";
+import type { Project, Diploma } from "../data/tipos";
 import { perfilInicial, type Perfil } from "../data/perfil";
 import api from "../data/api";
 
 export default function Principal() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [diplomas, setDiplomas] = useState<Diploma[]>([]);
   const [perfil, setPerfil] = useState<Perfil>(perfilInicial);
 
   useEffect(() => {
@@ -17,7 +19,13 @@ export default function Principal() {
       })
       .then((data) => setProjects(data))
       .catch((error) => console.error(error));
-
+fetch(`${api}/api/diplomas`)
+  .then((res) => {
+    if (!res.ok) throw new Error("Error al cargar diplomas");
+    return res.json();
+  })
+  .then((data) => setDiplomas(data))
+  .catch((error) => console.error(error));
     fetch(`${api}/api/perfil`)
       .then((res) => {
         if (!res.ok) throw new Error("Error al cargar perfil");
@@ -47,6 +55,17 @@ export default function Principal() {
           ))}
         </div>
       )}
+            <h2>Mis diplomas</h2>
+
+{diplomas.length === 0 ? (
+  <p>Todavía no hay diplomas</p>
+) : (
+  <div className="grid">
+    {diplomas.map((diploma) => (
+      <CardDiploma key={diploma.id} diploma={diploma} />
+    ))}
+  </div>
+)}
             <footer className="footer">
         {perfil.redes.github && (
           <a
