@@ -170,11 +170,12 @@ export default function Admin() {
             />
             <small>Incluí https:// al principio del enlace.</small>
 
-            <label>Instagram</label>
+            <label>Email</label>
             <input
+              type="email"
               value={datos.redes.instagram}
               onChange={(e) => cambiarRed("instagram", e.target.value)}
-              placeholder="URL de Instagram"
+              placeholder="tu@mail.com"
             />
             <small>Incluí https:// al principio del enlace.</small>
 

@@ -33,17 +33,7 @@ export default function Principal() {
         <h1>{perfil.nombre}</h1>
         <p>{perfil.bio}</p>
 
-        <div className="redes">
-          {perfil.redes.github && (
-            <a href={perfil.redes.github}>GitHub</a>
-          )}
-          {perfil.redes.linkedin && (
-            <a href={perfil.redes.linkedin}>LinkedIn</a>
-          )}
-          {perfil.redes.instagram && (
-            <a href={perfil.redes.instagram}>Instagram</a>
-          )}
-        </div>
+       
       </section>
 
       <h2>Mis proyectos</h2>
@@ -57,6 +47,45 @@ export default function Principal() {
           ))}
         </div>
       )}
+            <footer className="footer">
+        {perfil.redes.github && (
+          <a
+            href={perfil.redes.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwPs4aLjB6PrVFbGobXz0h7wluc7p07sCyaPnyTHvWSA&s=10"
+              alt="GitHub"
+              referrerPolicy="no-referrer"
+            />
+          </a>
+        )}
+        {perfil.redes.linkedin && (
+          <a
+            href={perfil.redes.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <img
+              src="https://img.magnific.com/vector-premium/icono-logo-linkedin-redes-profesionales_678821-855.jpg?semt=ais_hybrid&w=740&q=80"
+              alt="LinkedIn"
+              referrerPolicy="no-referrer"
+            />
+          </a>
+        )}
+        {perfil.redes.instagram && (
+          <a href={`mailto:${perfil.redes.instagram}`} aria-label="Enviar mail">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTygXllgg_6dwYAOhu6E6XtGlmTb-yJ9u8YX1Hme6vf0g&s=10"
+              alt="Mail"
+              referrerPolicy="no-referrer"
+            />
+          </a>
+        )}
+      </footer>
     </main>
   );
 }
