@@ -2,6 +2,7 @@
 -- Pegá este script en el SQL Editor de Neon o de Supabase y ejecutalo.
 
 -- Perfil ("Sobre mí"): una sola fila (id = 1).
+-- La columna "instagram" guarda el email (se muestra como ícono de mail en el footer).
 create table if not exists perfil (
   id        integer primary key default 1 check (id = 1),
   nombre    text not null default 'Tu nombre',
@@ -23,6 +24,16 @@ create table if not exists proyectos (
   created_at  timestamptz not null default now()
 );
 
+-- Diplomas del portafolio.
+create table if not exists diplomas (
+  id         serial primary key,
+  title      text not null,
+  issuer     text not null,
+  image      text not null,
+  link       text not null,
+  created_at timestamptz not null default now()
+);
+
 -- Seguridad (importante en Supabase):
 -- Supabase expone por defecto las tablas del schema "public" mediante su API REST.
 -- Esta plantilla se conecta directo a Postgres con DATABASE_URL, así que no la usa.
@@ -30,3 +41,4 @@ create table if not exists proyectos (
 -- En Neon no hace ningún daño.
 alter table perfil    enable row level security;
 alter table proyectos enable row level security;
+alter table diplomas  enable row level security;
